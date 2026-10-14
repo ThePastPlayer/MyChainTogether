@@ -47,7 +47,13 @@ function Invoke-NameWrapper([string]$Package,[string]$Wrapper,[string]$Arguments
     try {
         $null = $worker.Start()
         $stdout = $worker.StandardOutput.ReadToEndAsync(); $stderr = $worker.StandardError.ReadToEndAsync()
-        $worker.StandardInput.WriteLine($InputText); $worker.StandardInput.Close()
+        # These wrapper fixture inputs are ASCII. Write bytes directly so the
+        # runner's StreamWriter encoding cannot prepend a UTF-8 BOM that a
+        # legacy Windows console would decode as three visible characters.
+        $inputBytes = [Text.Encoding]::ASCII.GetBytes($InputText + "`r`n")
+        $worker.StandardInput.BaseStream.Write($inputBytes,0,$inputBytes.Length)
+        $worker.StandardInput.BaseStream.Flush()
+        $worker.StandardInput.Close()
         if (-not $worker.WaitForExit(20000)) { $worker.Kill(); throw 'Fixture launcher timeout.' }
         return [pscustomobject]@{ ExitCode=$worker.ExitCode; Output=($stdout.Result + $stderr.Result) }
     } finally { $worker.Dispose() }
