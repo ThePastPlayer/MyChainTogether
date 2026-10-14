@@ -72,6 +72,7 @@ try {
     function Read-Host { param($Prompt) $script:PromptCount++; return $script:Answers.Dequeue() }
 
     Assert-NameCheck ((ConvertTo-LanPlayerName (' ' + $leo + ' ')) -ceq $leo) 'UTF-8 name and trimming.'
+    Assert-NameCheck ((ConvertTo-LanPlayerName ([string][char]0xfeff + $leo)) -ceq $leo) 'UTF-8 console BOM does not become part of the nickname.'
     foreach ($invalid in @('', '   ', 'A#B', 'A=B', 'A[B]', ('A' + [char]27 + 'B'), ('A' * 49))) {
         Assert-NameRejected { ConvertTo-LanPlayerName $invalid } 'Pseudo invalide'
     }

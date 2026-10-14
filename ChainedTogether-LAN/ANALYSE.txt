@@ -161,7 +161,7 @@ Pseudos et mises a jour - 14 octobre 2026
 - Launch-LAN.ps1 verifie main de ThePastPlayer/MyChainTogether avant le lancement.
   Update-LAN.ps1 utilise une revision epinglee, un manifest SHA256, une zone de
   preparation, des sauvegardes et une restauration en cas d'erreur de copie.
-- Tests isoles : 97 chemins, 51 pseudos et 61 mises a jour. Deux profils et jeux
+- Tests isoles : 97 chemins, 52 pseudos et 61 mises a jour. Deux profils et jeux
   simules verifient Host/Julien et Join/Leo avec accents, migration du nom de PC,
   preservation des identites distinctes et protection des fichiers modifies.
 - Les tests de mise a jour simulent GitHub : panne reseau, contenu corrompu,

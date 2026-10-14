@@ -22,6 +22,31 @@ jobs:
       - name: Verify checksums and build ZIP
         shell: powershell
         run: ./tools/Build-Package.ps1
+      - name: Verify live GitHub downloads
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        shell: powershell
+        env:
+          CHAINED_LAN_GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          . ./ChainedTogether-LAN/Update-LAN.ps1 -FunctionsOnly
+          $distributionRoot = (Resolve-Path ./ChainedTogether-LAN).Path
+          $commit = Get-LanUpdateCommit
+          if ($commit -ne $env:GITHUB_SHA) {
+            Write-Output 'A newer commit is already on main; its workflow will verify live downloads.'
+            exit 0
+          }
+          $result = Invoke-LanPackageUpdate $distributionRoot -Force -CheckOnly
+          if ($result -ne 'Current') { throw 'Remote manifest differs from the checked-out package.' }
+          $probe = Join-Path $env:RUNNER_TEMP ('lan-payload-' + [Guid]::NewGuid().ToString('N') + '.dll')
+          try {
+            Get-LanRemoteUpdateFile $commit 'payload/steam_api64.dll' $probe
+            if ((Get-LanUpdateHash $probe) -ne (Get-LanUpdateHash (Join-Path $distributionRoot 'payload/steam_api64.dll'))) {
+              throw 'Downloaded binary checksum mismatch.'
+            }
+            Write-Output 'Live commit, manifest and binary download verified.'
+          } finally {
+            if (Test-Path -LiteralPath $probe) { Remove-Item -LiteralPath $probe -Force }
+          }
       - uses: actions/upload-artifact@v4
         with:
           name: ChainedTogether-LAN
