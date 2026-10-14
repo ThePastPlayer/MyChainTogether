@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "gameExeSha256": "4ca3cce06e965a9b1e3c6438fc8eb93de5b422c813275a92761c67563e85145b",
+  "gameBuildId": "25325926",
+  "files": {
+    "Join": {
+      "sha256": "039e0de24d7ddf28edb02ab80272c7ca241da808b0c22d96349f484f7df3eac1"
+    },
+    "Host": {
+      "sha256": "65a37afe976c29061ab653ba83b568861a3b6b5f5cc8eaa7c31f71cbf06a9da0"
+    }
+  },
+  "revision": 2,
+  "strategy": "MainMenu original Construct then native Delay 0.25 with appended callback invoking original Play and role action after Play creation returns. PlayMenu original unchanged. Host W_CreateSession original Construct then existing SetSelectedOption(2 Players).",
+  "staticValidation": "Package roundtrip, explicit export mutation allowlist, full bytecode reparse, packaged hashes verified",
+  "runtimeValidation": "Verified on the real game on one Windows PC: Host opens only Create Session with 2 Players selected, Create Session reaches local lobby; Join opens only session browser, Back returns to Play. Internet remained connected; physical two-PC join/gameplay not tested.",
+  "gameContentFiles": [
+    {
+      "relative": "ChainedTogether\\Content\\Paks\\ChainedTogether-Windows.pak",
+      "size": 7825838320,
+      "sha256": "e67624b9a86fac04af6bbf3dff54c688f12feb3434b8ba679df4acec13316b65"
+    }
+  ]
+}

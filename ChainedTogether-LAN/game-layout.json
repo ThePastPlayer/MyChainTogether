@@ -1,0 +1,9 @@
+{
+  "steamDllRelativePaths": [
+    "ChainedTogether\\Plugins\\SteamCorePro\\Source\\ThirdParty\\SteamLibrary\\redistributable_bin\\win64\\steam_api64.dll"
+  ],
+  "launchExeRelative": "ChainedTogether\\Binaries\\Win64\\ChainedTogether-Win64-Shipping.exe",
+  "observedGameBuildId": "25325926",
+  "observedOriginalSha256": "dcfaa13aa419a0641917205957dbe15aa472e7cf09a28cf8d3cf429598e67799",
+  "evidence": "Installation originale Steam build 25325926 : observation des modules du processus ChainedTogether-Win64-Shipping.exe par l'analyse principale. Seule la DLL SteamCorePro est chargee ; Steamv153 n'est pas un module charge. Compatibilite LAN encore a tester sur deux PC."
+}

@@ -1,0 +1,24 @@
+Goldberg regular DLL built from source
+Source: https://github.com/Detanup01/gbe_fork/tree/7103add7ca6ef3ef8353279219880068f2494fc8
+Tag: release-2026_09_27
+Source runtime code untouched; build recipe adjustments are listed in provenance.json.
+Premake/protoc and dependencies were built from pinned sources. No additional precompiled helper or DLL was downloaded.
+Target: api_regular x64 release, MSVC 19.44.35209.0, Windows SDK 10.0.26100.0, static /MT.
+Disabled optional builds: experimental DLL, Steamclient loader, overlay. No custom DOS stub, resource spoofing, or fake signature.
+Removed upstream /emittoolversioninfo:no to keep standard compiler metadata.
+Build completed: 0 errors, 20 upstream warnings; elapsed 00:03:11.03.
+DLL bytes: 
+11361280
+DLL SHA256: 
+03C28BDE9C51FE436422D24464AD135024B49011310DB4B2A5DB195CC8F76A9F
+Static checks: x64, 1282 named exports, DynamicBase and NX compatible, Rich metadata present=
+True
+Imports: 
+WS2_32.dll, IPHLPAPI.DLL, bcrypt.dll, dbghelp.dll, XINPUT1_4.dll, KERNEL32.dll, USER32.dll, ADVAPI32.dll, SHELL32.dll, ole32.dll, SETUPAPI.dll, WINMM.dll, ntdll.dll
+No game launched or game installation modified. No antivirus settings changed.
+Root agent will perform final Defender scan before runtime testing.
+Build commands:
+nmake /f Bootstrap-no-clean.mak MSDEV=vs2022 PLATFORM=x64 CONFIG=release windows-msbuild
+premake5.exe --file=premake5-deps-local.lua --64-build --build-ssq --build-zlib --build-mbedtls --build-curl --build-protobuf --build-opus --build-portaudio --build-sdl --custom-cmake=<build-root>/cmake.cmd --custom-extractor=C:/Windows/system32/tar.exe --j=3 --verbose --os=windows vs2022
+premake5.exe --file=premake5-local.lua --genproto --emubuild=source-7103add7ca6ef3ef8353279219880068f2494fc8-regular --os=windows vs2022
+MSBuild.exe build\project\vs2022\win\gbe.sln /target:api_regular /m:1 /p:CL_MPCount=2 /v:n /p:Configuration=release /p:Platform=x64

@@ -1,0 +1,171 @@
+Analyse Chained Together LAN - 11 octobre 2026
+
+Cible installee : Steam AppID 2567870, build 25325926, Windows x64.
+Executable analyse : ChainedTogether-Win64-Shipping.exe
+SHA256 : 4ca3cce06e965a9b1e3c6438fc8eb93de5b422c813275a92761c67563e85145b
+
+Observations du jeu original
+- DefaultEngine.ini extrait du pak : DefaultPlatformService=SteamCore,
+  SteamCoreSockets.SteamCoreSocketsNetDriver, port de jeu 27015.
+- Le processus charge la DLL SteamCorePro dans
+  ChainedTogether\Plugins\SteamCorePro\Source\ThirdParty\SteamLibrary\redistributable_bin\win64.
+  L'autre DLL Engine\...\Steamv153 n'etait pas chargee dans la sonde.
+- Les blueprints CustomGI referencent creation/jonction de sessions et des
+  fonctions SteamCorePro. Ces noms seuls ne prouvent pas leur controle runtime.
+
+Analyse native demandee
+Ghidra 12.1.2 dans Docker, reseau du container coupe, installation du jeu
+montee en lecture seule. Desassemblage/decompilation limites aux references
+pertinentes, fonctions delimitees par PE .pdata et chaines unwind.
+- OnlineSubsystemNull est enregistre dans FUN_140abeb10 ; implementation
+  presente vers 0x1446d1950. Cela prouve sa presence, pas son bon fonctionnement
+  dans le parcours de menu propre a ce jeu.
+- DefaultPlatformService est lu dans FUN_142fd7580 et FUN_14363db20.
+- Des wrappers demandent SteamNetworkingSockets012, notamment FUN_143789fb0.
+- StartGameInstance, FUN_142f1b810 : la commande est lue puis la sequence de
+  demarrage utilise une chaine vide et la configuration GameDefaultMap avec
+  LocalMapOptions. La carte passee seule sur la ligne de commande ne pilote
+  pas cette sequence de la version Shipping analysee.
+- Les sondes natives Null/IpNetDriver avec fichiers ini externes n'ont pas
+  ouvert de serveur 27015 identifiable. Certains essais quittaient rapidement.
+  Ce resultat limite ne permet pas de declarer le LAN natif impossible.
+
+Chemin retenu pour ce lanceur
+Remplacer seulement l'API SteamCorePro par Goldberg regular x64, pour
+conserver les menus et le chemin SteamCore du jeu. Goldberg implemente
+SteamNetworkingSockets012 et les salons Steam sur des transports TCP/UDP
+locaux. Port de decouverte/transport configure : 47584.
+offline=0 signifie BLoggedOn() vrai ; ce reglage n'exige pas Internet.
+
+Source epinglee :
+https://github.com/Detanup01/gbe_fork/tree/7103add7ca6ef3ef8353279219880068f2494fc8
+Tag : release-2026_09_27. Compilation locale depuis les sources ; provenance
+et licences dans payload. Le binaire precompile de la release a ete bloque
+par Defender (Trojan:Win32/Suschil!rfn) et n'a pas ete utilise. Aucune exclusion
+antivirus ni modification des protections n'a ete faite.
+
+Verification du lanceur
+86 controles isoles passent sous PowerShell 5.1 : preparation, restauration,
+rollback avec fichier verrouille, refus de fichiers modifies apres installation,
+identite persistante par PC, selection de la DLL et verification SHA256,
+role Host/Join/Manual, preferences par PC, changement de role reversible,
+reprise des adresses PeerIP, garde du build Steam et de l'executable.
+
+Limite de validation
+Il faut encore confirmer une partie complete entre deux ordinateurs physiques.
+Les resultats de lancement et de protocole local seront consignes avec leurs
+limites ; ils ne remplacent pas cette verification.
+
+Sources techniques principales
+https://github.com/Detanup01/gbe_fork
+https://steamcore-pro.eeldev.com/docfiles/additional/configuring_ipnetdriver
+https://steamcore-pro.eeldev.com/docfiles/additional/incompatible_unique_net_id
+https://github.com/trumank/repak
+
+Verification finale de la DLL et du jeu
+- SHA256 DLL : 03c28bde9c51fe436422d24464ad135024b49011310db4b2a5db195cc8f76a9f.
+- Defender : scan personnalise termine, code0, aucune menace detectee.
+- Test de protocole reel : deux processus et identites distinctes, creation,
+  decouverte et jonction salon ; SteamNetworkingSockets012 PING/PONG/ACK fiable.
+  Deux sorties0, rapport success=true. Aucun service Internet necessaire au test.
+- Jeu reel : la DLL compilee est chargee au chemin SteamCorePro attendu ;
+  le jeu reste actif30s en mode headless isole et ecoute TCP/UDP47584.
+- Le lanceur normal cree une fenetre du jeu et reste actif durant la sonde15s.
+- Les modules steamclient64 de Steam et EOS restent charges. Aucune connexion
+  TCP externe n'a ete observee dans la derniere capture, mais cela ne prouve
+  pas l'absence de tout trafic ni le bon fonctionnement avec Internet coupe.
+- Une partie complete entre deux PC physiques, sans Internet, reste a confirmer.
+- Le helper pare-feu passe19 controles mocks ; aucune regle reelle n'a ete creee.
+Tous les processus de test ont ete arretes. Installation actuelle sur F: preparee
+pour le LAN ; Restaurer-Steam.cmd retablit les fichiers originaux.
+
+Ouverture automatique des menus
+- Deux paquets locaux de menus, derives des assets de cette installation.
+  Pas de clic par coordonnees ni injection DLL pour naviguer dans le menu.
+- MainMenu_W conserve son initialisation puis utilise Delay(0.25) pour appeler
+  le parcours Play original apres AddToViewport. Apres le retour du parcours,
+  il appelle Host ou Join sur le widget Play cree. Le menu Play reste original.
+- Host ajoute SetSelectedOption("2 Players") apres l'initialisation du widget
+  W_CreateSession ; le gestionnaire existant fixe MaxPlayers=2 sur le widget
+  et sur CustomGI. Aucun appel automatique CreateSession ou JoinSession.
+- Assets verifies par UAssetAPI 1.1.0 : roundtrip, relecture du bytecode,
+  comparaison des exports ; paquets V11 produits par repak 0.2.3.
+- Premiere variante abandonnee : navigation dans Construct trop tot,
+  menus superposes au runtime. Seule la variante corrigee v2 est livree.
+- Jeu reel lance par Start-ChainedTogether-LAN.ps1 -Role Host : seul menu
+  Create Session visible, 2 Players selectionne ; clic Create Session reussi,
+  salon affichant le joueur local cree. Cela ne prouve pas la jonction distante.
+- Jeu reel lance par -Role Join : seul navigateur Join session visible ;
+  Back retourne correctement au menu Play. Aucun hote distant n'etait actif.
+- Controle des builds via appmanifest_2567870.acf + SHA256 executable ;
+  fichiers PAK verifies avant modification, un seul role installe a la fois.
+  Les noms et hashes des fichiers sont conserves dans payload/menu.
+- Les deux tests utilisaient ce seul PC avec sa connexion Internet habituelle.
+  La jonction et le gameplay entre deux PC physiques hors Internet restent
+  a verifier. Le programme natif LAN teste precedemment ne remplace pas cela.
+
+Source du parseur d'assets : https://github.com/atenfyr/UAssetAPI
+
+Detection portable des chemins - 12 octobre 2026
+- Game-Paths.ps1 partage la detection entre Heberger, Rejoindre, Lancer,
+  Restaurer et Autoriser. Aucun disque d'installation n'est fixe au runtime.
+- Chemins Windows normalises avant comparaison sans distinction de casse ;
+  lecture des cles Steam HKCU/HKLM et des bibliotheques VDF modernes/anciennes.
+  Les volumes absents et dossiers sans executable sont ignores.
+- Un gamePath memorise indisponible relance la detection. Les chemins relatifs
+  de launcher-settings.json sont resolus depuis le dossier du lanceur.
+  Plusieurs installations completes imposent un choix explicite -GamePath.
+- Le dossier du jeu, ChainedTogether.exe, le shipping EXE et son dossier Win64
+  resolvent le meme executable shipping et la meme racine de sauvegarde.
+- 62 controles isoles passent sous Windows PowerShell 5.1.26100.9444, incluant
+  les cinq raccourcis CMD depuis un autre dossier, avec espaces dans le chemin.
+  Fixtures temporaires sur C: ; aucun second disque physique n'a ete teste.
+- Sur ce PC, les vrais raccourcis Heberger/Rejoindre/Lancer/Restaurer passent
+  avec -Diagnose et Autoriser avec -WhatIf. Les menus Host/Join, le build Steam,
+  les SHA256 et la selection de la DLL sont verifies par le diagnostic.
+  Ces controles n'ont lance aucun jeu ni modifie le jeu ou le pare-feu.
+- Suite reproductible : tests\Test-GamePaths.ps1. La verification d'une partie
+  complete entre deux PC reste distincte de ces controles de chemins.
+
+Scan des disques et paquet portable - 12 octobre 2026
+- Version : 2026-10-12-scan-disques-v1. L'ancien ZIP dans Telechargements
+  contenait encore l'ancienne detection ; les corrections du dossier extrait
+  n'y avaient pas ete repercutees. Le paquet doit etre reconstruit apres edition.
+- Recherche du shipping EXE x64 avec DLL Steam, independamment du registre,
+  du nom du dossier ou de la presence d'un manifeste. Recherche habituelle
+  limitee a 30 secondes, puis disques locaux/USB a 90 secondes. Les liens et
+  dossiers systeme proteges ne sont pas suivis. Choix de dossier en secours.
+- Memorisation du dossier dans le profil local apres preparation reussie ;
+  les chemins de ce PC et les journaux ne font pas partie du ZIP distribue.
+- Sans manifeste, l'executable ET le PAK original sont verifies par SHA256.
+  PAK ChainedTogether-Windows.pak : 7825838320 octets ; SHA256
+  e67624b9a86fac04af6bbf3dff54c688f12feb3434b8ba679df4acec13316b65.
+  Un manifeste present avec build incorrect reste refuse.
+- 97 controles isoles passent sous PowerShell 5.1 : paquet deplace, jeu dans
+  un dossier au nom quelconque sans Steam declare ni manifeste, deux entrees
+  de disques simulees, scan etendu hors des dossiers habituels, contenu modifie
+  refuse, cache local deplace et rapport Diagnostic-LAN.txt genere.
+  Les volumes simules sont des dossiers temporaires sur C:, pas deux PC reels.
+- Diagnostic Join de l'installation reelle reussi avec la nouvelle version.
+  Aucune partie distante ni execution sur le PC du partenaire n'a ete verifiee.
+
+Pseudos et mises a jour - 14 octobre 2026
+- Player-Names.ps1 lit les PersonaName dans le loginusers.vdf local de Steam.
+  Le compte actif est prioritaire, puis MostRecent, puis le Timestamp unique
+  le plus recent. Un nom de connexion prive n'est jamais utilise comme pseudo.
+- Sans pseudo fiable, saisie au demarrage ; -AskPlayerName la force. Le dernier
+  choix manuel est memorise dans le profil local. -PlayerName reste prioritaire.
+- Lecture UTF-8 explicite des JSON : les noms accentues ne sont plus relus avec
+  l'encodage ANSI par Windows PowerShell 5.1. Le pseudo peut changer sans demande
+  de restauration manuelle ; les hashes existants restent controles auparavant.
+- Launch-LAN.ps1 verifie main de ThePastPlayer/MyChainTogether avant le lancement.
+  Update-LAN.ps1 utilise une revision epinglee, un manifest SHA256, une zone de
+  preparation, des sauvegardes et une restauration en cas d'erreur de copie.
+- Tests isoles : 97 chemins, 51 pseudos et 61 mises a jour. Deux profils et jeux
+  simules verifient Host/Julien et Join/Leo avec accents, migration du nom de PC,
+  preservation des identites distinctes et protection des fichiers modifies.
+- Les tests de mise a jour simulent GitHub : panne reseau, contenu corrompu,
+  chemins sortant du paquet, modifications locales, nouvelles versions, fichiers
+  supprimes et erreur de partage Windows declenchant un rollback.
+- Aucun jeu reel ni pare-feu n'a ete modifie pour ces tests. Le gameplay entre
+  deux PC physiques et la fluidite reseau restent a verifier separement.

@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "file": "steam_api64.dll",
+  "kind": "source-build",
+  "target": "api_regular",
+  "architecture": "x64",
+  "configuration": "release",
+  "sha256": "03C28BDE9C51FE436422D24464AD135024B49011310DB4B2A5DB195CC8F76A9F",
+  "bytes": 11361280,
+  "releaseTag": "release-2026_09_27",
+  "sourceCommit": "7103add7ca6ef3ef8353279219880068f2494fc8",
+  "sourceUrl": "https://github.com/Detanup01/gbe_fork/tree/7103add7ca6ef3ef8353279219880068f2494fc8",
+  "tagUrl": "https://github.com/Detanup01/gbe_fork/tree/release-2026_09_27",
+  "sourceBuildManifestFile": "source-build-manifest.json",
+  "sourceBuildManifestSHA256": "655c84955a1d03255a4d552d8fece7162a3a37e7fba43b0d4739830960bb19ee",
+  "sourceBuildManifest": {
+    "Status": "api_regular x64 Release compiled successfully; no game/runtime test performed by build agent",
+    "GoldbergRepository": "https://github.com/Detanup01/gbe_fork",
+    "GoldbergTag": "release-2026_09_27",
+    "GoldbergCommit": "7103add7ca6ef3ef8353279219880068f2494fc8",
+    "DependencySourceCommit": "92a4a130262083c4e887155cbe6bcab99baf36ea",
+    "PremakeRepository": "https://github.com/premake/premake-core",
+    "PremakeTag": "v5.0.0-beta8",
+    "PremakeCommit": "2ca338a25ed5f6e62d36c9cd70e5f313953c630d",
+    "PremakeSHA256": "71B1B95C2EABADA2D7709D3AB018302F63D84E9C5EEE2020EEC4754A4A2A96B9",
+    "AbseilRepository": "https://github.com/abseil/abseil-cpp",
+    "AbseilTag": "20250512.1",
+    "AbseilCommit": "76bb24329e8bf5f39704eb10d21b9a80befa7c81",
+    "Compiler": "MSVC 19.44.35209.0; Visual Studio 2022 Community 17.14.5",
+    "SDK": "10.0.26100.0",
+    "CMake": "3.31.6-msvc6",
+    "BuildRoot": "<build-root>",
+    "LocalBuildAdjustments": [
+      "Bootstrap-no-clean.mak removes only automatic windows-clean prerequisite.",
+      "premake5-deps-local.lua points FetchContent absl to the official source clone and disables downloads.",
+      "cmake.cmd calls installed Microsoft bundled CMake; no downloaded helper binaries.",
+      "premake5-local.lua removes upstream /emittoolversioninfo:no to retain ordinary compiler metadata; no runtime source changed."
+    ],
+    "BuildCommands": [
+      "nmake /f Bootstrap-no-clean.mak MSDEV=vs2022 PLATFORM=x64 CONFIG=release windows-msbuild",
+      "premake5.exe --file=premake5-deps-local.lua --64-build --build-ssq --build-zlib --build-mbedtls --build-curl --build-protobuf --build-opus --build-portaudio --build-sdl --custom-cmake=<build-root>/cmake.cmd --custom-extractor=C:/Windows/system32/tar.exe --j=3 --verbose --os=windows vs2022",
+      "premake5.exe --file=premake5-local.lua --genproto --emubuild=source-7103add7ca6ef3ef8353279219880068f2494fc8-regular --os=windows vs2022",
+      "MSBuild.exe build\\project\\vs2022\\win\\gbe.sln /target:api_regular /m:1 /p:CL_MPCount=2 /v:n /p:Configuration=release /p:Platform=x64"
+    ],
+    "Excluded": [
+      "Experimental DLL",
+      "Detours",
+      "Steamclient loader",
+      "Ingame overlay",
+      "Fake signature",
+      "Custom DOS stub",
+      "Resource spoofing",
+      "Any AV exclusion or configuration change"
+    ],
+    "Dependencies": [
+      {
+        "Dependency": "libssq",
+        "SourceCommit": "92a4a130262083c4e887155cbe6bcab99baf36ea",
+        "GitBlob": "02e81f219468c9f7ab6befc823e6612e85e73be2",
+        "SHA256": "E92860F8FF94E04485174B6E075FAC8DD56A5EBACBB245CCEE0D8104FA3074F4",
+        "Bytes": 13927,
+        "Path": "<build-root>\\source-archives\\libssq.tar.gz"
+      },
+      {
+        "Dependency": "zlib",
+        "SourceCommit": "92a4a130262083c4e887155cbe6bcab99baf36ea",
+        "GitBlob": "dea1bf58d289675e863659b151eddc4e33b7e92b",
+        "SHA256": "5726E93AD621930942876E5388A0966AD10D8643ED6CB2E1AD2FB1C6A007D228",
+        "Bytes": 1572226,
+        "Path": "<build-root>\\source-archives\\zlib.tar.gz"
+      },
+      {
+        "Dependency": "curl",
+        "SourceCommit": "92a4a130262083c4e887155cbe6bcab99baf36ea",
+        "GitBlob": "f2031dec1132b5f190c2e25a8fbfdf2de5562f6e",
+        "SHA256": "E3B4C895F160BB1AD5617CBAF1D4F09EFEFD1398947093A8A7C66FA578BBBAD4",
+        "Bytes": 3447880,
+        "Path": "<build-root>\\source-archives\\curl.tar.gz"
+      },
+      {
+        "Dependency": "mbedtls",
+        "SourceCommit": "92a4a130262083c4e887155cbe6bcab99baf36ea",
+        "GitBlob": "8d57881ccd2c3d4eeae2df0f12150e8c49ee1f1c",
+        "SHA256": "27133C38F383738D8BA0F0D86B52226F1EF3A48DA32FED1A2E306B8DED66B6D8",
+        "Bytes": 6787467,
+        "Path": "<build-root>\\source-archives\\mbedtls.tar.gz"
+      },
+      {
+        "Dependency": "protobuf",
+        "SourceCommit": "92a4a130262083c4e887155cbe6bcab99baf36ea",
+        "GitBlob": "a1969cb7ee5903b6b21bafc4433f12f6f3de6d7b",
+        "SHA256": "1F29CFCD40DBB033EBD7680E42DDEFB22FDC3E5AC1C37A4F09D4931CBFAE7BA1",
+        "Bytes": 10005226,
+        "Path": "<build-root>\\source-archives\\protobuf.tar.gz"
+      },
+      {
+        "Dependency": "opus",
+        "SourceCommit": "92a4a130262083c4e887155cbe6bcab99baf36ea",
+        "GitBlob": "1f5ad2e38c5f187620541c21b4159d9a6240a3e1",
+        "SHA256": "E360D4E85994F3B84985159BFF106E8640CF1108784E6C38FA78589D894553D0",
+        "Bytes": 9758642,
+        "Path": "<build-root>\\source-archives\\opus.tar.gz"
+      },
+      {
+        "Dependency": "portaudio",
+        "SourceCommit": "92a4a130262083c4e887155cbe6bcab99baf36ea",
+        "GitBlob": "ca663183294acda4167cbc32940fa5970a67a434",
+        "SHA256": "A516A2FB86C8927E674433C376167ABF0D42023DC6F47C55D5E4E09A8CCB92AC",
+        "Bytes": 1582599,
+        "Path": "<build-root>\\source-archives\\portaudio.tar.gz"
+      },
+      {
+        "Dependency": "sdl",
+        "SourceCommit": "92a4a130262083c4e887155cbe6bcab99baf36ea",
+        "GitBlob": "a0697f6fa33677a155235f2fa54d194ac7cc1597",
+        "SHA256": "8F557B500502DF85185E31DA5ABCB0F4E1E83C05B932E62A816EFCD78FD3110C",
+        "Bytes": 15463268,
+        "Path": "<build-root>\\source-archives\\sdl.tar.gz"
+      }
+    ],
+    "Result": {
+      "File": "steam_api64.dll",
+      "SHA256": "03C28BDE9C51FE436422D24464AD135024B49011310DB4B2A5DB195CC8F76A9F",
+      "Bytes": 11361280,
+      "Machine": "x64",
+      "Exports": 1282,
+      "RichStampPresent": true,
+      "DynamicBase": true,
+      "NXCompatible": true,
+      "Imports": [
+        "WS2_32.dll",
+        "IPHLPAPI.DLL",
+        "bcrypt.dll",
+        "dbghelp.dll",
+        "XINPUT1_4.dll",
+        "KERNEL32.dll",
+        "USER32.dll",
+        "ADVAPI32.dll",
+        "SHELL32.dll",
+        "ole32.dll",
+        "SETUPAPI.dll",
+        "WINMM.dll",
+        "ntdll.dll"
+      ],
+      "BuildErrors": 0,
+      "BuildWarnings": 20,
+      "BuildDuration": "00:03:11.03",
+      "DefenseSettingsChanged": false,
+      "NoNewDefenderDetectionObservedThrough": "2026-10-11T23:47:42.2732473+03:00"
+    },
+    "LocalRecipeHashes": [
+      {
+        "File": "gbe\\premake5-local.lua",
+        "SHA256": "366F611D35ABF5DDF42D93715E4567D04EC96CB80B1D702926A0AE0003A47EC6"
+      },
+      {
+        "File": "gbe\\premake5-deps-local.lua",
+        "SHA256": "456A8C8858E3DA8AFE377E3F8F8528E5135A01548C6BA39A0E83A38845513DB5"
+      },
+      {
+        "File": "premake-source\\Bootstrap-no-clean.mak",
+        "SHA256": "54854C996055053F3955702D286E4015386CC39DB14A8B728CE2602DE3A3F965"
+      },
+      {
+        "File": "build-premake.cmd",
+        "SHA256": "57476A7D01D652E886EBCEC1E48835827CF805B66120F6BDBD65F5C5E681BF90"
+      },
+      {
+        "File": "build-deps.cmd",
+        "SHA256": "5E39A6B127F593BE455E827B65A424A015DA0E01C02CC9E5D537CC7366522B12"
+      },
+      {
+        "File": "build-api.cmd",
+        "SHA256": "A2F720AD0F80FB4B1DD38899EF9B4A79424FE2D5206212EE38B4B00F1E02C462"
+      },
+      {
+        "File": "cmake.cmd",
+        "SHA256": "79428F71D066028C9DEA2217034B4FE96AF1E734655F5466C2B424B47BDA7408"
+      }
+    ]
+  },
+  "runtimeSourceModifications": "None",
+  "experimental": false,
+  "overlay": false,
+  "loader": false,
+  "customDOSStub": false,
+  "fakeSigning": false,
+  "richStampPresent": true,
+  "runtimeTests": "Root: Defender custom scan no threats; lobby/Sockets012 roundtrip passed in two local processes; compiled DLL loaded by real game with TCP/UDP47584; normal launcher created game window. Full offline gameplay on two physical PCs not tested. See ../validation.json."
+}

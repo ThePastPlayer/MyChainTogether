@@ -1,0 +1,28 @@
+name: Validate and package
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Isolated fixtures
+        shell: powershell
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File ./ChainedTogether-LAN/tests/Test-GamePaths.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File ./ChainedTogether-LAN/tests/Test-PlayerNames.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File ./ChainedTogether-LAN/tests/Test-Updates.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify checksums and build ZIP
+        shell: powershell
+        run: ./tools/Build-Package.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ChainedTogether-LAN
+          path: dist/ChainedTogether-LAN.zip

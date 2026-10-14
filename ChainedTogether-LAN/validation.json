@@ -1,0 +1,148 @@
+{
+  "testedUtc": "2026-10-11T21:17:50.4635579Z",
+  "gameAppId": 2567870,
+  "gameBuildId": "25325926",
+  "gameExeSha256": "4ca3cce06e965a9b1e3c6438fc8eb93de5b422c813275a92761c67563e85145b",
+  "payloadSha256": "03c28bde9c51fe436422d24464ad135024b49011310db4b2a5db195cc8f76a9f",
+  "defender": {
+    "customScanExitCode": 0,
+    "reportedNoThreats": true,
+    "payloadPresentAndHashVerified": true,
+    "protectionChanged": false
+  },
+  "launcherFixtureChecks": 86,
+  "firewallHelperMockChecks": 19,
+  "firewallActuallyChanged": false,
+  "protocol": {
+    "success": true,
+    "kind": "two local processes, distinct identities",
+    "matchmakingInterface": "009",
+    "socketsInterface": "012",
+    "lobbyCreateDiscoverJoin": true,
+    "reliablePingPongAck": true,
+    "processExitCodes": [
+      0,
+      0
+    ],
+    "physicalTwoPcTest": false
+  },
+  "gameRuntime": {
+    "isolatedHeadlessDurationSeconds": 30,
+    "aliveAtEnd": true,
+    "compiledDllActuallyLoaded": true,
+    "udpListenPort": 47584,
+    "tcpListenPort": 47584,
+    "normalLauncherWindowCreated": true,
+    "normalLauncherAliveAt15Seconds": true,
+    "steamClientModuleStillLoaded": true,
+    "eosModuleStillLoaded": true,
+    "internetDisconnectedTest": false,
+    "physicalTwoPcGameplayTest": false
+  },
+  "status": "Prepared LAN launcher with both native menus verified on one PC; full offline gameplay between two physical PCs remains to be confirmed",
+  "autoMenuRuntime": {
+    "observedUtc": "2026-10-11T21:17:50.4799165Z",
+    "implementation": "Native cooked widget override, no external input automation",
+    "variant": "v2",
+    "gameBuildId": "25325926",
+    "hostPakSha256": "65a37afe976c29061ab653ba83b568861a3b6b5f5cc8eaa7c31f71cbf06a9da0",
+    "joinPakSha256": "039e0de24d7ddf28edb02ab80272c7ca241da808b0c22d96349f484f7df3eac1",
+    "realLauncherHost": true,
+    "hostOnlyCreateSessionMenu": true,
+    "hostTwoPlayersSelected": true,
+    "hostCreateSessionReachedLobby": true,
+    "realLauncherJoin": true,
+    "joinOnlySessionBrowser": true,
+    "joinBackReturnedToPlayMenu": true,
+    "noLayeredParentMenus": true,
+    "internetDisconnected": false,
+    "physicalTwoPcGameplay": false,
+    "screenshotsSaved": false,
+    "verification": "Observed via Computer Use Sky screenshots; no coordinate inputs were used to navigate into either startup menu. Manual click used for Create Session and Back verification."
+  },
+  "dynamicPathDetection": {
+    "testedUtc": "2026-10-11T22:05:02.0676317Z",
+    "sharedResolver": "Game-Paths.ps1",
+    "powershellVersion": "5.1.26100.9444",
+    "fixtureChecks": 62,
+    "fixtureScope": "Temporary Steam libraries on C:; modern and legacy VDF, path duplicates, missing volume, stale settings, explicit selection and all CMD wrappers from another directory with spaces",
+    "localWrapperChecks": [
+      {
+        "name": "Heberger-LAN.cmd",
+        "arguments": "-Diagnose",
+        "exitCode": 0
+      },
+      {
+        "name": "Rejoindre-LAN.cmd",
+        "arguments": "-Diagnose",
+        "exitCode": 0
+      },
+      {
+        "name": "Lancer-LAN.cmd",
+        "arguments": "-Diagnose",
+        "exitCode": 0
+      },
+      {
+        "name": "Restaurer-Steam.cmd",
+        "arguments": "-Diagnose",
+        "exitCode": 0
+      },
+      {
+        "name": "Autoriser-LAN.cmd",
+        "arguments": "-WhatIf",
+        "exitCode": 0
+      }
+    ],
+    "hostJoinBuildAndMenuHashesVerified": true,
+    "secondaryPhysicalDriveTest": false,
+    "physicalTwoPcTest": false,
+    "gameLaunched": false,
+    "gameFilesModified": false,
+    "firewallChanged": false
+  },
+  "diskScanValidation": {
+    "testedUtc": "2026-10-12T20:28:28.511666Z",
+    "version": "2026-10-12-scan-disques-v1",
+    "fixtureChecks": 97,
+    "noSteamRegistrationAndNoManifestFixture": true,
+    "arbitraryGameFolderFixture": true,
+    "extendedDiskScanFixture": true,
+    "diskInventory": "Two simulated disk roots in temporary directories on C:",
+    "noManifestMenuValidation": "Full SHA256 of shipping EXE and original game PAK",
+    "alteredContentRejected": true,
+    "mismatchedSteamBuildRejected": true,
+    "portableJoinHostAndDiagnosticWrappersVerified": true,
+    "perPcCacheVerified": true,
+    "staleCacheVerified": true,
+    "localJoinDiagnoseExitCode": 0,
+    "originalDownloadsZipWasStale": true,
+    "gameLaunched": false,
+    "gameFilesModified": false,
+    "firewallChanged": false,
+    "friendsPcTest": false,
+    "physicalTwoPcGameplayTest": false
+  },
+  "playerNamesAndUpdates": {
+    "testedUtc": "2026-10-14T18:19:23.4729464Z",
+    "version": "2026-10-14-pseudos-autoupdate-v2",
+    "pathFixtureChecks": 97,
+    "nameFixtureChecks": 51,
+    "updateFixtureChecks": 61,
+    "activeSteamAccountAndRecentAccount": true,
+    "utf8NamesIncludingLeo": true,
+    "manualPromptAndLocalPreference": true,
+    "oldMachineNameMigration": true,
+    "hostAndJoinWrappersPrepareOnly": true,
+    "changedNameDoesNotRequireManualRestore": true,
+    "distinctLanIdentities": true,
+    "pinnedCommitAndSha256Update": true,
+    "offlineAndBadDownloadPreservePackage": true,
+    "editedFilesProtected": true,
+    "copyFailureRollback": true,
+    "privateUserFilesExcluded": true,
+    "physicalTwoPcGameplayTest": false,
+    "realGameFilesModified": false,
+    "bootstrapRefreshBeforeLaunch": true,
+    "bootstrapOfflineModesAndFatalStop": true
+  }
+}
