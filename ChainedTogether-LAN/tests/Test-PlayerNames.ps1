@@ -47,13 +47,8 @@ function Invoke-NameWrapper([string]$Package,[string]$Wrapper,[string]$Arguments
     try {
         $null = $worker.Start()
         $stdout = $worker.StandardOutput.ReadToEndAsync(); $stderr = $worker.StandardError.ReadToEndAsync()
-        # These wrapper fixture inputs are ASCII. Write bytes directly so the
-        # runner's StreamWriter encoding cannot prepend a UTF-8 BOM that a
-        # legacy Windows console would decode as three visible characters.
-        $inputBytes = [Text.Encoding]::ASCII.GetBytes($InputText + "`r`n")
-        $worker.StandardInput.BaseStream.Write($inputBytes,0,$inputBytes.Length)
-        $worker.StandardInput.BaseStream.Flush()
-        $worker.StandardInput.Close()
+        # Exercise the inherited console encoding, including UTF-8 pipe BOMs.
+        $worker.StandardInput.WriteLine($InputText); $worker.StandardInput.Close()
         if (-not $worker.WaitForExit(20000)) { $worker.Kill(); throw 'Fixture launcher timeout.' }
         return [pscustomobject]@{ ExitCode=$worker.ExitCode; Output=($stdout.Result + $stderr.Result) }
     } finally { $worker.Dispose() }
@@ -79,6 +74,10 @@ try {
 
     Assert-NameCheck ((ConvertTo-LanPlayerName (' ' + $leo + ' ')) -ceq $leo) 'UTF-8 name and trimming.'
     Assert-NameCheck ((ConvertTo-LanPlayerName ([string][char]0xfeff + $leo)) -ceq $leo) 'UTF-8 console BOM does not become part of the nickname.'
+    foreach ($codePage in @(437,850,1252)) {
+        $legacyBom = [Text.Encoding]::GetEncoding($codePage).GetString([Text.Encoding]::UTF8.GetBytes([string][char]0xfeff))
+        Assert-NameCheck ((ConvertTo-LanPlayerName ($legacyBom + $leo)) -ceq $leo) "UTF-8 BOM decoded with console code page $codePage."
+    }
     foreach ($invalid in @('', '   ', 'A#B', 'A=B', 'A[B]', ('A' + [char]27 + 'B'), ('A' * 49))) {
         Assert-NameRejected { ConvertTo-LanPlayerName $invalid } 'Pseudo invalide'
     }

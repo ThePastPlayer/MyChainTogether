@@ -126,7 +126,7 @@
     "testedUtc": "2026-10-14T18:19:23.4729464Z",
     "version": "2026-10-14-pseudos-autoupdate-v2",
     "pathFixtureChecks": 97,
-    "nameFixtureChecks": 52,
+    "nameFixtureChecks": 55,
     "updateFixtureChecks": 61,
     "activeSteamAccountAndRecentAccount": true,
     "utf8NamesIncludingLeo": true,

@@ -2,8 +2,15 @@
 # Local Steam display names only: no network requests, login names or credentials.
 
 function ConvertTo-LanPlayerName([string]$Name, [switch]$FromSteam) {
-    # Some Windows UTF-8 console pipes prepend a BOM to the first input line.
+    # A UTF-8 pipe BOM may be decoded through an OEM console code page first.
+    # Remove both the Unicode marker and those deterministic legacy spellings.
     $Name = $Name.Trim().Trim([char]0xfeff).Trim()
+    $preamble = [Text.Encoding]::UTF8.GetBytes([string][char]0xfeff)
+    foreach ($codePage in @(437,850,1252)) {
+        try { $prefix = [Text.Encoding]::GetEncoding($codePage).GetString($preamble) }
+        catch { continue }
+        if ($Name.StartsWith($prefix,[StringComparison]::Ordinal)) { $Name = $Name.Substring($prefix.Length).Trim(); break }
+    }
     if ($FromSteam) {
         $Name = [regex]::Replace($Name, '[\p{Cc}=\[\];#]', '_').Trim()
         if ($Name.Length -gt 48) {
